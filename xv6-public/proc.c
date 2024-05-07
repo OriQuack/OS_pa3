@@ -532,3 +532,22 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+// MYCODE
+int
+mmap(uint addr, int length, int prot, int flags, int fd, int offset)
+{
+
+}
+
+int
+munmap(uint addr)
+{
+
+}
+
+int
+freemem()
+{
+  
+}
