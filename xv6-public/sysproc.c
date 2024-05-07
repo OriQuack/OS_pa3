@@ -93,7 +93,7 @@ sys_uptime(void)
 int
 sys_mmap(void)
 {
-  uint addr;
+  int addr;
   int length;
   int prot;
   int flags;
@@ -119,7 +119,7 @@ sys_mmap(void)
 int
 sys_munmap(void)
 {
-  uint addr;
+  int addr;
 
   if(argint(0, &addr) < 0)
     return -1;
