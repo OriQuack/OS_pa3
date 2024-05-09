@@ -80,7 +80,7 @@ mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
 }
 
 // MYCODE
-static int
+int
 mapVMpages(pde_t *pgdir, void *va, uint size, int perm)
 {
   char *a, *last;
