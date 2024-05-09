@@ -558,7 +558,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
       }
     }
     // TODO: read file from offset
-    return &va;
+    return va;
   }
   else if(flags == MAP_ANONYMOUS){
     for(int i = 0; i < npages; i++){
@@ -567,7 +567,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         return 0;
       }
     }
-    return &va;
+    return va;
   }
   else if(flags == MAP_POPULATE|MAP_ANONYMOUS){
     char *mem;
@@ -584,7 +584,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         return 0;
       }
     }
-    return &va;
+    return va;
   }
   return 0;
 }
