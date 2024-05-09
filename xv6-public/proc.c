@@ -7,6 +7,11 @@
 #include "proc.h"
 #include "spinlock.h"
 
+// MYCODE
+extern int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
+extern int mapVMpages(pde_t *pgdir, void *va, uint size, int perm);
+// ~
+
 struct {
   struct spinlock lock;
   struct proc proc[NPROC];
@@ -569,7 +574,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
     }
     return va;
   }
-  else if(flags == MAP_POPULATE|MAP_ANONYMOUS){
+  else if(flags == (MAP_POPULATE|MAP_ANONYMOUS)){
     char *mem;
     for(int i = 0; i < npages; i++){
       mem = kalloc();
