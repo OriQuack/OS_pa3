@@ -537,6 +537,55 @@ procdump(void)
 uint
 mmap(uint addr, int length, int prot, int flags, int fd, int offset)
 {
+  uint va = PGROUNDUP(addr + 0x40000000);
+  int npages = length / PGSIZE;
+  pde_t *pgdir = myproc()->pgdir;
+  int perm = prot & PROT_WRITE;
+
+  if(flags == MAP_POPULATE){
+    char *mem;
+    for(int i = 0; i < npages; i++){
+      mem = kalloc();
+      if(mem == 0){
+        cprintf("out of memory\n");
+        return 0;
+      }
+      memset(mem, 0, PGSIZE);
+      if(mappages(pgdir, (char*)va, PGSIZE, V2P(mem), perm|PTE_U) < 0){
+        cprintf("out of memory (2)\n");
+        kfree(mem);
+        return 0;
+      }
+    }
+    // TODO: read file from offset
+    return &va;
+  }
+  else if(flags == MAP_ANONYMOUS){
+    for(int i = 0; i < npages; i++){
+      if(mapVMpages(pgdir, (char*)va, PGSIZE, perm|PTE_U) < 0){
+        cprintf("out of memory\n");
+        return 0;
+      }
+    }
+    return &va;
+  }
+  else if(flags == MAP_POPULATE|MAP_ANONYMOUS){
+    char *mem;
+    for(int i = 0; i < npages; i++){
+      mem = kalloc();
+      if(mem == 0){
+        cprintf("out of memory\n");
+        return 0;
+      }
+      memset(mem, 0, PGSIZE);
+      if(mappages(pgdir, (char*)va, PGSIZE, V2P(mem), perm|PTE_U) < 0){
+        cprintf("out of memory (2)\n");
+        kfree(mem);
+        return 0;
+      }
+    }
+    return &va;
+  }
   return 0;
 }
 

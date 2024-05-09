@@ -79,6 +79,35 @@ mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
   return 0;
 }
 
+// MYCODE
+static int
+mapVMpages(pde_t *pgdir, void *va, uint size, int perm)
+{
+  char *a, *last;
+  pte_t *pte;
+
+  a = (char*)PGROUNDDOWN((uint)va);
+  last = (char*)PGROUNDDOWN(((uint)va) + size - 1);
+  for (;;) {
+    pte = walkpgdir(pgdir, a, 1);
+    if (!pte)
+      return -1;
+
+    if (*pte & PTE_P)
+      panic("remap");
+
+    *pte = perm;
+
+    if (a == last)
+      break;
+    a += PGSIZE;
+  }
+  return 0;
+}
+
+// TODO: page fault trap hadeling
+
+
 // There is one page table per process, plus one that's used when
 // a CPU is not running any process (kpgdir). The kernel uses the
 // current process's page table during system calls and interrupts;
