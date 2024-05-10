@@ -7,6 +7,13 @@
 #include "x86.h"
 #include "traps.h"
 #include "spinlock.h"
+// MYCODE
+#include "file.h"
+
+// MYCODE
+extern int mmap_count;
+extern struct mmap_area *mmap_arr[64];
+
 
 // Interrupt descriptor table (shared by all CPUs).
 struct gatedesc idt[256];
@@ -77,6 +84,41 @@ trap(struct trapframe *tf)
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
+  case T_PGFLT:
+    cprintf("pagefault");
+    struct mmap_area *m;
+    int found = -1;
+    for(int i = 0; i < mmap_count; i++){
+      m = mmap_arr[i];
+      if(m->addr < rcr2() && m->addr + m->length > rcr2()){
+        found = i;
+        break;
+      }
+    }
+    if(found == -1){
+      panic("page fault cannot map");
+    }
+    
+    // map page
+    char *mem;
+    pde_t *pgdir = m->p->pgdir;
+    mem = kalloc();
+    if(mem == 0){
+      cprintf("out of memory\n");
+      panic("page fault cannot map");
+    }
+    memset(mem, 0, PGSIZE);
+    if(mappages(pgdir, (char*)m->addr, PGSIZE, V2P(mem), m->prot|PTE_U) < 0){
+      cprintf("out of memory (2)\n");
+      kfree(mem);
+      panic("page fault cannot map");
+    }
+    // read file to memory with offset
+    if(m->f != 0)
+      if(filereadOffset(m->f, m->prot, (char *)V2P(mem), m->offset, PGSIZE) == -1)
+        panic("page fault cannot map");
+    
+    lapiceoi();
 
   //PAGEBREAK: 13
   default:
