@@ -621,8 +621,8 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
       }
     }
   }
-  // add to mmap_area
-  struct mmap_area *m;
+  // add to mmap_area / malloc??
+  struct mmap_area *m = 0;
   m->addr = va;
   m->f = f;
   m->flags = flags;
