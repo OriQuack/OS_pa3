@@ -32,6 +32,17 @@ struct context {
   uint eip;
 };
 
+// MYCODE
+struct mmap_area {
+  struct file *f;
+  uint addr;
+  int length;
+  int offset;
+  int prot;
+  int flags;
+  struct proc * p;
+};
+
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
 // Per-process state

@@ -549,6 +549,8 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
 
   if(flags == MAP_POPULATE){
     char *mem;
+    struct file *f = myproc()->ofile[fd];
+
     for(int i = 0; i < npages; i++){
       mem = kalloc();
       if(mem == 0){
@@ -561,8 +563,10 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         kfree(mem);
         return 0;
       }
+      // read file to memory with offset
+      filereadOffset(f, V2P(mem), offset, PGSIZE);
     }
-    // TODO: read file from offset
+    // TODO: add to mmap_area? why?
     return va;
   }
   else if(flags == MAP_ANONYMOUS){
