@@ -10,7 +10,7 @@
 #include "spinlock.h"
 
 // MYCODE
-static uint total_pages = 0;
+uint total_pages;
 
 void freerange(void *vstart, void *vend);
 extern char end[]; // first address after kernel loaded from ELF file
@@ -34,6 +34,9 @@ struct {
 void
 kinit1(void *vstart, void *vend)
 {
+  // MYCODE
+  total_pages = 0;
+  //~
   initlock(&kmem.lock, "kmem");
   kmem.use_lock = 0;
   freerange(vstart, vend);
