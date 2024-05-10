@@ -567,7 +567,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         return 0;
       }
       // read file to memory with offset
-      filereadOffset(f, V2P(mem), offset, PGSIZE);
+      filereadOffset(f, (char *)V2P(mem), offset, PGSIZE);
     }
     // TODO: add to mmap_area? why? lock?
     return va;
