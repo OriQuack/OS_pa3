@@ -561,8 +561,8 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   if(flags != MAP_ANONYMOUS && fd < 0) return 0;
   if(flags == MAP_ANONYMOUS && (fd != -1 || offset != 0)) return 0;
   if(fd >= 0) {
-    if((prot == PROT_READ || prot == PROT_READ|PROT_WRITE) && !f->readable) return 0;
-    if((prot == PROT_WRITE || prot == PROT_READ|PROT_WRITE) && !f->writable) return 0;
+    if((prot == PROT_READ || prot == (PROT_READ|PROT_WRITE)) && !f->readable) return 0;
+    if((prot == PROT_WRITE || prot == (PROT_READ|PROT_WRITE)) && !f->writable) return 0;
   }
 
   pde_t *pgdir = myproc()->pgdir;
@@ -644,10 +644,11 @@ munmap(uint addr)
   struct mmap_area *m = 0;
   int found = -1;
   for(int i = 0; i < mmap_count; i++){
-    if(mmap_arr[i]->addr == addr)
+    if(mmap_arr[i]->addr == addr){
       m = mmap_arr[i];
       found = i;
       break;
+    }
   }
   // cannot find addr in mmap_arr
   if(found == -1) return -1;
