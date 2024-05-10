@@ -6,13 +6,17 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "file.h"
 
 // MYCODE
 extern int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
 extern int mapVMpages(pde_t *pgdir, void *va, uint size, int perm);
 extern int filereadOffset(struct file *f, char *addr, int offset, int n);
+extern int _munmap(pde_t *pgdir, uint addr, int length);
 
-struct mmap_area mmap_arr[64];
+static struct mmap_area *mmap_arr[64];
+static int mmap_count = 0;
+extern uint total_pages;
 // ~
 
 struct {
@@ -545,14 +549,29 @@ procdump(void)
 uint
 mmap(uint addr, int length, int prot, int flags, int fd, int offset)
 {
-  uint va = PGROUNDUP(addr + 0x40000000);
+  struct proc* p = myproc();
+  struct file *f = 0;
+  if(fd >= 0)
+    f = p->ofile[fd];
+  uint va = addr + 0x40000000;
   int npages = length / PGSIZE;
+
+  // error handeling
+  if(addr % PGSIZE != 0 || length % PGSIZE != 0) return 0;
+  if(flags != MAP_ANONYMOUS && fd < 0) return 0;
+  if(flags == MAP_ANONYMOUS && (fd != -1 || offset != 0)) return 0;
+  if(fd >= 0) {
+    if((prot == PROT_READ || prot == PROT_READ|PROT_WRITE) && !f->readable) return 0;
+    if((prot == PROT_WRITE || prot == PROT_READ|PROT_WRITE) && !f->writable) return 0;
+  }
+
   pde_t *pgdir = myproc()->pgdir;
   int perm = prot & PROT_WRITE;
 
+  // allocate physical page & make page table & map file from disk
   if(flags == MAP_POPULATE){
     char *mem;
-    struct file *f = myproc()->ofile[fd];
+    f = myproc()->ofile[fd];
 
     for(int i = 0; i < npages; i++){
       mem = kalloc();
@@ -569,9 +588,8 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
       // read file to memory with offset
       filereadOffset(f, (char *)V2P(mem), offset, PGSIZE);
     }
-    // TODO: add to mmap_area? why? lock?
-    return va;
   }
+  // only record mapping area / PAGE TABLE?
   else if(flags == MAP_ANONYMOUS){
     for(int i = 0; i < npages; i++){
       if(mapVMpages(pgdir, (char*)va, PGSIZE, perm|PTE_U) < 0){
@@ -579,8 +597,8 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         return 0;
       }
     }
-    return va;
   }
+  // allocate physical page & make page table & fill with zero
   else if(flags == (MAP_POPULATE|MAP_ANONYMOUS)){
     char *mem;
     for(int i = 0; i < npages; i++){
@@ -596,19 +614,58 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         return 0;
       }
     }
-    return va;
   }
-  return 0;
+  // only record mapping area / WTF?
+  else{
+    for(int i = 0; i < npages; i++){
+      if(mapVMpages(pgdir, (char*)va, PGSIZE, perm|PTE_U) < 0){
+        cprintf("out of memory\n");
+        return 0;
+      }
+    }
+  }
+  // add to mmap_area
+  struct mmap_area *m;
+  m->addr = va;
+  m->f = f;
+  m->flags = flags;
+  m->length = length;
+  m->offset = offset;
+  m->p = p;
+  m->prot = prot;
+  mmap_arr[mmap_count++] = m;
+
+  return va;
 }
 
 int
 munmap(uint addr)
 {
-  return 0;
+  struct mmap_area *m = 0;
+  int found = -1;
+  for(int i = 0; i < mmap_count; i++){
+    if(mmap_arr[i]->addr == addr)
+      m = mmap_arr[i];
+      found = i;
+      break;
+  }
+  // cannot find addr in mmap_arr
+  if(found == -1) return -1;
+  
+  // free physical page and page table if exists
+  _munmap(m->p->pgdir, m->addr, m->length);
+
+  // remove mmap_area structure
+  for(int i = found; i < mmap_count - 1; i++){
+    mmap_arr[i] = mmap_arr[i + 1];
+  }
+  mmap_arr[--mmap_count] = 0;
+
+  return 1;
 }
 
 int
 freemem()
 {
-  return 0;
+  return total_pages;
 }

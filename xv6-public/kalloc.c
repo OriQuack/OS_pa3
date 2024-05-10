@@ -9,6 +9,9 @@
 #include "mmu.h"
 #include "spinlock.h"
 
+// MYCODE
+static uint total_pages = 0;
+
 void freerange(void *vstart, void *vend);
 extern char end[]; // first address after kernel loaded from ELF file
                    // defined by the kernel linker script in kernel.ld
@@ -72,6 +75,9 @@ kfree(char *v)
   r = (struct run*)v;
   r->next = kmem.freelist;
   kmem.freelist = r;
+  // MYCODE
+  total_pages++;
+  //~
   if(kmem.use_lock)
     release(&kmem.lock);
 }
@@ -89,6 +95,9 @@ kalloc(void)
   r = kmem.freelist;
   if(r)
     kmem.freelist = r->next;
+    // MYCODE
+    total_pages--;
+    //~
   if(kmem.use_lock)
     release(&kmem.lock);
   return (char*)r;

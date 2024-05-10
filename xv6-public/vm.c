@@ -96,7 +96,7 @@ mapVMpages(pde_t *pgdir, void *va, uint size, int perm)
     if (*pte & PTE_P)
       panic("remap");
 
-    *pte = perm;
+    *pte = perm; // not present?
 
     if (a == last)
       break;
@@ -305,6 +305,56 @@ deallocuvm(pde_t *pgdir, uint oldsz, uint newsz)
     }
   }
   return newsz;
+}
+
+// MYCODE
+int
+_munmap(pde_t *pgdir, uint addr, int length)
+{
+  pte_t *pte;
+  uint pa;
+  uint va = addr;
+  uint vend = va + length;
+  int pte_count = 0;
+
+  for(; va < vend; va += PGSIZE){
+    pte = walkpgdir(pgdir, (char*)va, 0);
+    if(!pte)
+      va = PGADDR(PDX(va) + 1, 0, 0) - PGSIZE;
+    else if((*pte & PTE_P) != 0){
+      pa = PTE_ADDR(*pte);
+      if(pa == 0)
+        panic("kfree");
+      char *v = P2V(pa);
+      kfree(v);
+      *pte = 0;
+    }
+  }
+  // remove unused page table
+  pde_t *pde;
+  pte_t *pgtab;
+  va = addr;
+
+  while(va < vend){
+    pde = &pgdir[PDX(va)];
+    if(*pde & PTE_P){
+      pgtab = (pte_t*)P2V(PTE_ADDR(*pde));
+      for(int i = 0; i < NPTENTRIES; i++){
+        if(pgtab[i] & PTE_P){
+          pte_count++;
+          break;
+        }
+      }
+      if(pte_count == 0){
+        pa = PTE_ADDR(*pde);
+        char *v = P2V(pa);
+        kfree(v);
+        *pde = 0;
+      }
+    }
+    va = PGADDR(PDX(va) + 1, 0, 0) - PGSIZE;  
+  }
+  return 1;
 }
 
 // Free a page table and all the physical memory pages
