@@ -6,7 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
-#include "file.h"
+// #include "file.h"
 
 // MYCODE
 extern int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
