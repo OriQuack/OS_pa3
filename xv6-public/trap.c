@@ -7,13 +7,12 @@
 #include "x86.h"
 #include "traps.h"
 #include "spinlock.h"
-// MYCODE
-#include "file.h"
 
 // MYCODE
 extern int mmap_count;
 extern struct mmap_area *mmap_arr[64];
-
+extern int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
+extern int filereadOffset(struct file *f, int prot, char *addr, int offset, int n);
 
 // Interrupt descriptor table (shared by all CPUs).
 struct gatedesc idt[256];
