@@ -14,8 +14,8 @@ extern int mapVMpages(pde_t *pgdir, void *va, uint size, int perm);
 extern int filereadOffset(struct file *f, int prot, char *addr, int offset, int n);
 extern int _munmap(pde_t *pgdir, uint addr, int length);
 
-static struct mmap_area *mmap_arr[64];
-static int mmap_count = 0;
+struct mmap_area *mmap_arr[64];
+int mmap_count = 0; // static?????
 extern uint total_pages;
 // ~
 
