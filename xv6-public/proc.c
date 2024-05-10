@@ -10,6 +10,9 @@
 // MYCODE
 extern int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
 extern int mapVMpages(pde_t *pgdir, void *va, uint size, int perm);
+extern int filereadOffset(struct file *f, char *addr, int offset, int n);
+
+struct mmap_area mmap_arr[64];
 // ~
 
 struct {
@@ -566,7 +569,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
       // read file to memory with offset
       filereadOffset(f, V2P(mem), offset, PGSIZE);
     }
-    // TODO: add to mmap_area? why?
+    // TODO: add to mmap_area? why? lock?
     return va;
   }
   else if(flags == MAP_ANONYMOUS){
