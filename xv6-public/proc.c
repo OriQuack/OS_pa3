@@ -16,7 +16,7 @@ extern int _munmap(pde_t *pgdir, uint addr, int length);
 
 static struct mmap_area *mmap_arr[64];
 static int mmap_count = 0;
-extern uint total_pages;
+static uint total_pages = 0;
 // ~
 
 struct {

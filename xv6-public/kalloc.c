@@ -10,7 +10,7 @@
 #include "spinlock.h"
 
 // MYCODE
-static uint total_pages = 0;
+extern uint total_pages;
 
 void freerange(void *vstart, void *vend);
 extern char end[]; // first address after kernel loaded from ELF file
