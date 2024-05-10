@@ -114,11 +114,13 @@ fileread(struct file *f, char *addr, int n)
 
 // MYCODE
 int
-filereadOffset(struct file *f, char *addr, int offset, int n)
+filereadOffset(struct file *f, int prot, char *addr, int offset, int n)
 {
   int r;
 
   if(f->readable == 0)
+    return -1;
+  if((prot & PROT_WRITE) && !f->writable)
     return -1;
   if(f->type == FD_PIPE)
     return piperead(f->pipe, addr, n);

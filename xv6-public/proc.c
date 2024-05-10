@@ -11,7 +11,7 @@
 // MYCODE
 extern int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
 extern int mapVMpages(pde_t *pgdir, void *va, uint size, int perm);
-extern int filereadOffset(struct file *f, char *addr, int offset, int n);
+extern int filereadOffset(struct file *f, int prot, char *addr, int offset, int n);
 extern int _munmap(pde_t *pgdir, uint addr, int length);
 
 static struct mmap_area *mmap_arr[64];
@@ -560,10 +560,6 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   if(addr % PGSIZE != 0 || length % PGSIZE != 0) return 0;
   if(flags != MAP_ANONYMOUS && fd < 0) return 0;
   if(flags == MAP_ANONYMOUS && (fd != -1 || offset != 0)) return 0;
-  if(fd >= 0) {
-    if((prot == PROT_READ || prot == (PROT_READ|PROT_WRITE)) && !f->readable) return 0;
-    if((prot == PROT_WRITE || prot == (PROT_READ|PROT_WRITE)) && !f->writable) return 0;
-  }
 
   pde_t *pgdir = myproc()->pgdir;
   int perm = prot & PROT_WRITE;
@@ -586,7 +582,8 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         return 0;
       }
       // read file to memory with offset
-      filereadOffset(f, (char *)V2P(mem), offset, PGSIZE);
+      if(filereadOffset(f, prot, (char *)V2P(mem), offset, PGSIZE) == -1)
+        return 0;
     }
   }
   // only record mapping area / PAGE TABLE?
