@@ -15,7 +15,7 @@ extern int filereadOffset(struct file *f, int prot, char *addr, int offset, int 
 extern int _munmap(pde_t *pgdir, uint addr, int length);
 
 struct mmap_area *mmap_arr[64];
-int mmap_count = 0; // static?????
+int mmap_count;
 extern uint total_pages;
 // ~
 
@@ -31,6 +31,18 @@ extern void forkret(void);
 extern void trapret(void);
 
 static void wakeup1(void *chan);
+
+void
+mmapinit(void){
+  char* mem;
+  if(mem = kalloc() == 0)
+    panic("mmapinit no memeory");
+  memset(mem, 0, PGSIZE);
+  for(int i = 0; i < 64; i++){
+    mmap_arr[i] = mem + sizeof(struct mmap_area) * i;
+  }
+  mmap_count = 0;
+}
 
 void
 pinit(void)
@@ -622,7 +634,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
     }
   }
   // add to mmap_area / malloc??
-  struct mmap_area *m = 0;
+  struct mmap_area *m = mmap_arr[mmap_count++];
   m->addr = va;
   m->f = f;
   m->flags = flags;
@@ -657,7 +669,7 @@ munmap(uint addr)
   for(int i = found; i < mmap_count - 1; i++){
     mmap_arr[i] = mmap_arr[i + 1];
   }
-  mmap_arr[--mmap_count] = 0;
+  memset(mmap_arr[--mmap_count], 0, sizeof(struct mmap_area));
 
   return 1;
 }
