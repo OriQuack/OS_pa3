@@ -12,7 +12,7 @@
 #include "syscall.h"
 
 int main(){
-  int fd = open("README.md", O_RDONLY);
+  int fd = open("README", O_RDONLY);
   if(fd == -1){
     printf(1, "open failed");
     exit();
