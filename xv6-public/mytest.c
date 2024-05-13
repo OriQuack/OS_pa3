@@ -11,14 +11,14 @@
 #include "proc.h"
 #include "syscall.h"
 
-void main(){
+int main(){
   int fd = open("README.md", O_RDONLY);
   if(fd == -1){
     printf(1, "open failed");
     exit();
   }
 
-  char* src = mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
+  char* src = (char*)mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
     printf(1, "mmap failed");
     exit();
