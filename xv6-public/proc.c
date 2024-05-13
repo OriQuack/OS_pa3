@@ -574,7 +574,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   if((flags == MAP_ANONYMOUS || 0) && (fd != -1 || offset != 0)) return 0;
 
   pde_t *pgdir = myproc()->pgdir;
-  int perm = prot & PROT_WRITE;
+  int perm = prot; // & PROT_WRITE;
 
   // allocate physical page & make page table & map file from disk
   if(flags == MAP_POPULATE){
