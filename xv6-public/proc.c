@@ -35,11 +35,11 @@ static void wakeup1(void *chan);
 void
 mmapinit(void){
   char* mem;
-  if(mem = kalloc() == 0)
+  if((mem = kalloc()) == 0)
     panic("mmapinit no memeory");
   memset(mem, 0, PGSIZE);
   for(int i = 0; i < 64; i++){
-    mmap_arr[i] = mem + sizeof(struct mmap_area) * i;
+    mmap_arr[i] = (struct mmap_area *)(mem + sizeof(struct mmap_area) * i);
   }
   mmap_count = 0;
 }
