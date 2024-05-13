@@ -571,7 +571,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   // error handeling
   if(addr % PGSIZE != 0 || length % PGSIZE != 0) return 0;
   if(flags != MAP_ANONYMOUS && fd < 0) return 0;
-  if(flags == MAP_ANONYMOUS && (fd != -1 || offset != 0)) return 0;
+  if((flags == MAP_ANONYMOUS || 0) && (fd != -1 || offset != 0)) return 0;
 
   pde_t *pgdir = myproc()->pgdir;
   int perm = prot & PROT_WRITE;
@@ -599,7 +599,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
     }
   }
   // only record mapping area / PAGE TABLE?
-  else if(flags == MAP_ANONYMOUS){
+  else if(flags == MAP_ANONYMOUS || flags == 0){
     for(int i = 0; i < npages; i++){
       if(mapVMpages(pgdir, (char*)va, PGSIZE, perm|PTE_U) < 0){
         cprintf("out of memory\n");
