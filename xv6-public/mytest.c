@@ -23,6 +23,7 @@ int main(){
     printf(1, "mmap failed");
     exit();
   }
+  printf(1, "MMAP DONE");
 
   printf(1, "-fd data: %c %c %c\n", src[0], src[1], src[2]);
   exit();
