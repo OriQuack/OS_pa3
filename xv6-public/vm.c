@@ -455,12 +455,8 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
         }
         // parent physically mapped
         else{
-          if((pte = walkpgdir(pgdir, va, 1)) == 0)
-            return -1;
-          if(!(*pte & PTE_P)){
-            va += PGSIZE;
-            continue;
-          }
+          // if((pte = walkpgdir(pgdir, va, 1)) == 0)
+          //   return -1;
           if((mem = kalloc()) == 0)
             return -1;
           memset(mem, 0, PGSIZE);
