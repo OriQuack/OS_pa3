@@ -18,7 +18,7 @@ int main(){
     exit();
   }
 
-  //printf(1, "FREE MEM: %d\n", freemem());
+  printf(1, "FREE MEM: %d\n", freemem());
 
   char buf[10];
   read(fd, buf, 10);

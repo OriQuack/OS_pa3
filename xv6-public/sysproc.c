@@ -130,5 +130,5 @@ sys_munmap(void)
 int
 sys_freemem(void)
 {
-  return sys_freemem();
+  return freemem();
 }
