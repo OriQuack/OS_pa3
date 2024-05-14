@@ -84,6 +84,7 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_PGFLT:
+  cprintf("PGFAULT\n");
     struct mmap_area *m;
     int found = -1;
     for(int i = 0; i < mmap_count; i++){
