@@ -37,6 +37,9 @@ int main(){
     printf(2, "CHILD: -fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[8191]);
     exit();
   }
+  else{
+    wait();
+  }
 
   // UNMAP
   int k = munmap((uint)src);

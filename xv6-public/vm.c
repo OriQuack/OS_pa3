@@ -456,6 +456,7 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
         else{
           if((mem = kalloc()) == 0)
             return -1;
+          memset(mem, 0, PGSIZE);
           memmove(mem, (char*)P2V(pa), PGSIZE);
           if(mappages(pgdir, va, PGSIZE, V2P(mem), pte_flags) < 0) {
             kfree(mem);
