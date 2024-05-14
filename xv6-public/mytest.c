@@ -71,8 +71,6 @@ int main(){
   printf(2, "ANONY POPULATE DONE\n");
   printf(1, "FREE MEM: %d\n", freemem());
   printf(1, "-fd data: %c %c %c %c %c\n", dst[0], dst[1], dst[2], dst[3], dst[4095]);
-  munmap((uint)dst);
-  printf(1, "FREE MEM: %d\n", freemem());
 
   // ANONYMOUS
   char *anony = (char*)mmap(4096, 4096 * 3, PROT_READ, MAP_ANONYMOUS, -1, 0);
@@ -82,9 +80,23 @@ int main(){
   }
   printf(1, "ANONY DONE: %x\n", (uint)anony);
   printf(1, "FREE MEM: %d\n", freemem());
-  printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[2], anony[4095]);
+  printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[4096*3-1], anony[4095]);
   printf(1, "FREE MEM: %d\n", freemem());
 
+  int pid = fork();
+  if(pid == 0){
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    printf(2, "CHILD: ANONY READ: %c\n", anony[0]);
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    printf(2, "CHILD: ANONY READ: %c\n", anony[4096*3-1]);
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    printf(2, "CHILD: ANONY READ: %c\n", anony[4096]);
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    exit();
+  }
+  wait();
+  munmap((uint)dst);
+  printf(1, "FREE MEM: %d\n", freemem());
   munmap((uint)anony);
   printf(1, "FREE MEM: %d\n", freemem());
 
