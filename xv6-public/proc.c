@@ -664,8 +664,8 @@ munmap(uint addr)
   struct mmap_area *m = 0;
   int found = -1;
   for(int i = 0; i < mmap_count; i++){
-    if(mmap_arr[i]->addr == addr){
-      m = mmap_arr[i];
+    m = mmap_arr[i];
+    if(m->addr == addr && m->p == myproc()){
       found = i;
       break;
     }
