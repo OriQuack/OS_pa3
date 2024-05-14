@@ -22,7 +22,7 @@ int main(){
   printf(1, "FREE MEM: %d\n", freemem());
 
   // POPULATE
-  char* src = (char*)mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
+  char* src = (char*)mmap(0, 4096 * 2, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
     printf(1, "POPULATE failed");
     exit();
@@ -51,7 +51,7 @@ int main(){
   printf(1, "-fd data: %c %c %c %c %c\n", dst[0], dst[1], dst[2], dst[3], dst[4095]);
 
   // ANONYMOUS
-  char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, -1, 0);
+  char *anony = (char*)mmap(4096, 4096 * 3, PROT_READ, MAP_ANONYMOUS, -1, 0);
   if(anony == 0){
     printf(1, "ANONY failed");
     exit();
