@@ -570,7 +570,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
 
   // error handeling
   if(addr % PGSIZE != 0 || length % PGSIZE != 0) return 0;
-  if((flags != MAP_ANONYMOUS || flags != (MAP_POPULATE|MAP_ANONYMOUS)) && fd < 0) return 0;
+  if(flags == MAP_POPULATE && fd < 0) return 0;
   if((flags == MAP_ANONYMOUS || flags == 0) && (fd != -1 || offset != 0)) return 0;
 
   pde_t *pgdir = myproc()->pgdir;
