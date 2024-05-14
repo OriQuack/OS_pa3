@@ -117,7 +117,7 @@ int
 filereadOffset(struct file *f, int prot, char *addr, int offset, int n)
 {
   int r;
-
+  cprintf("F type: %d", f->type);
   if(f->readable == 0)
     return -1;
   if((prot & PROT_WRITE) && !f->writable)
