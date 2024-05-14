@@ -98,7 +98,7 @@ mapVMpages(pde_t *pgdir, void *va, uint size, int perm)
 
     *pte = perm; // not present?
 
-    if (a == last)
+    if (a >= last)
       break;
     a += PGSIZE;
   }
@@ -431,11 +431,12 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
 {
   struct mmap_area *m = 0;
   pde_t *ppgdir = parent->pgdir;
+  pte_t *ppte = 0;
   pte_t *pte = 0;
   char* va = 0;
   char* mem = 0;
   int numpages = 0;
-  uint pa, pte_flags;
+  uint ppa, ppte_flags;
 
   for(int i = 0; i < mmap_count; i++){
     m = mmap_arr[i];
@@ -444,21 +445,23 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
       numpages = m->length / PGSIZE;
       for(int j = 0; j < numpages; j++){
         // get pte of ppgdir
-        if((pte = walkpgdir(ppgdir, va, 0)) == 0)
+        if((ppte = walkpgdir(ppgdir, va, 0)) == 0)
           return -1;
-        pa = PTE_ADDR(*pte);
-        pte_flags = PTE_FLAGS(*pte);
+        ppa = PTE_ADDR(*ppte);
+        ppte_flags = PTE_FLAGS(*ppte);
         // parent not physically mapped
-        if(!(*pte & PTE_P)){
-          mapVMpages(pgdir, va, PGSIZE, pte_flags);
+        if(!(*ppte & PTE_P)){
+          mapVMpages(pgdir, va, PGSIZE, ppte_flags);
         }
         // parent physically mapped
         else{
+          if((pte = walkpgdir(pgdir, va, 1)) == 0)
+            return -1;
           if((mem = kalloc()) == 0)
             return -1;
           memset(mem, 0, PGSIZE);
-          memmove(mem, (char*)P2V(pa), PGSIZE);
-          if(mappages(pgdir, va, PGSIZE, V2P(mem), pte_flags) < 0) {
+          memmove(mem, (char*)P2V(ppa), PGSIZE);
+          if(mappages(pgdir, va, PGSIZE, V2P(mem), ppte_flags) < 0) {
             kfree(mem);
             return -1;
           }
