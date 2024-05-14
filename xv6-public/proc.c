@@ -582,7 +582,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
     f = myproc()->ofile[fd];
 
     for(int i = 0; i < npages; i++){
-      mem = kalloc();
+      mem = kalloc(); // virtual
       if(mem == 0){
         cprintf("out of memory\n");
         return 0;

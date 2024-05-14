@@ -84,7 +84,7 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_PGFLT:
-    cprintf("pagefault");
+    cprintf("Page Fault!!\n");
     struct mmap_area *m;
     int found = -1;
     for(int i = 0; i < mmap_count; i++){
@@ -95,7 +95,7 @@ trap(struct trapframe *tf)
       }
     }
     if(found == -1){
-      panic("page fault cannot map");
+      panic("Page fault cannot map\n");
     }
     
     // map page
@@ -104,18 +104,18 @@ trap(struct trapframe *tf)
     mem = kalloc();
     if(mem == 0){
       cprintf("out of memory\n");
-      panic("page fault cannot map");
+      panic("Page fault cannot map (2)\n");
     }
     memset(mem, 0, PGSIZE);
     if(mappages(pgdir, (char*)m->addr, PGSIZE, V2P(mem), m->prot|PTE_U) < 0){
       cprintf("out of memory (2)\n");
       kfree(mem);
-      panic("page fault cannot map");
+      panic("page fault cannot map\n");
     }
     // read file to memory with offset
     if(m->f != 0)
       if(filereadOffset(m->f, m->prot, (char *)V2P(mem), m->offset, PGSIZE) == -1)
-        panic("page fault cannot map");
+        panic("page fault cannot map\n");
     
     lapiceoi();
 
