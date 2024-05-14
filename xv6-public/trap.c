@@ -94,6 +94,7 @@ trap(struct trapframe *tf)
       }
     }
     if(found == -1){
+      cprintf("Address: %d\n", rcr2());
       panic("Page fault cannot map (1)\n");
     }
     
@@ -115,7 +116,7 @@ trap(struct trapframe *tf)
     if(m->f != 0)
       if(filereadOffset(m->f, m->prot, mem, m->offset, PGSIZE) == -1)
         panic("page fault cannot map (4)\n");
-        
+
     lapiceoi();
     break;
 

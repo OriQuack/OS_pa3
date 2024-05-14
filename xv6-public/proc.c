@@ -644,8 +644,6 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   m->prot = prot;
   mmap_arr[mmap_count++] = m;
 
-  cprintf("MAREA: %x, %d\n", mmap_arr[mmap_count-1]->addr, mmap_arr[mmap_count-1]->length);
-
   return va;
 }
 
