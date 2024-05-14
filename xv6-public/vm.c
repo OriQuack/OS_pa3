@@ -444,13 +444,14 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
       numpages = m->length / PGSIZE;
       for(int j = 0; j < numpages; j++){
         // get pte of ppgdir
-        if((pte = walkpgdir(ppgdir, va, 1)) == 0)
+        if((pte = walkpgdir(ppgdir, va, 0)) == 0)
           return -1;
         pa = PTE_ADDR(*pte);
         pte_flags = PTE_FLAGS(*pte);
         // parent not physically mapped
         if(!(*pte & PTE_P)){
           mapVMpages(pgdir, va, PGSIZE, pte_flags);
+          cprintf("VM DONE\n");
         }
         // parent physically mapped
         else{
