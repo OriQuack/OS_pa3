@@ -444,10 +444,8 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
       numpages = m->length / PGSIZE;
       for(int j = 0; j < numpages; j++){
         // get pte of ppgdir
-        cprintf("WALK GO");
         if((pte = walkpgdir(ppgdir, va, 0)) == 0)
           return -1;
-        cprintf("VM GO\n");
         pa = PTE_ADDR(*pte);
         pte_flags = PTE_FLAGS(*pte);
         // parent not physically mapped
@@ -460,6 +458,7 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
             return -1;
           memset(mem, 0, PGSIZE);
           memmove(mem, (char*)P2V(pa), PGSIZE);
+          cprintf("HERE");
           if(mappages(pgdir, va, PGSIZE, V2P(mem), pte_flags) < 0) {
             kfree(mem);
             return -1;
