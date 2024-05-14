@@ -24,7 +24,7 @@ int main(){
   // POPULATE
   char* src = (char*)mmap(0, 4096 * 2, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
-    printf(1, "POPULATE failed");
+    printf(2, "POPULATE failed");
     exit();
   }
   printf(2, "POPULATE DONE\n");
@@ -34,7 +34,7 @@ int main(){
   // UNMAP
   int k = munmap((uint)src);
   if(k == -1){
-    printf(1, "UNMAP FAILED");
+    printf(2, "UNMAP FAILED");
     exit();
   }
   printf(1, "UNMAP DONE\n");
@@ -43,7 +43,7 @@ int main(){
   // ANONYMOUS + POPULATE
   char* dst = (char *)mmap(0, 4096, PROT_READ, MAP_ANONYMOUS|MAP_POPULATE, -1, 0);
     if(dst == 0){
-    printf(1, "ANONY POPULATE failed");
+    printf(2, "ANONY POPULATE failed");
     exit();
   }
   printf(2, "ANONY POPULATE DONE\n");
