@@ -23,7 +23,8 @@ int main(){
   printf(1, "read: %c %c\n", buf[0], buf[1]);
 
   char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, 0, 0);
-  printf(1, "mmap annony done %u", (uint)anony);
+  printf(1, "mmap annony done %d\n", (uint)anony);
+  printf(1, "ANONY READ: %c %c\n", anony[0], anony[4095]);
 
   char* src = (char*)mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
