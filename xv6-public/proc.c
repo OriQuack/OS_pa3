@@ -593,14 +593,12 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         kfree(mem);
         return 0;
       }
-      cprintf("mmapges done\n");
       // read file to memory with offset
       if(filereadOffset(f, prot, mem, offset, PGSIZE) == -1)
         return 0;
-      cprintf("fileread done\n");
     }
   }
-  // only record mapping area / PAGE TABLE?
+  // only record mapping area & make PAGE TABLE if not exists
   else if(flags == MAP_ANONYMOUS || flags == 0){
     for(int i = 0; i < npages; i++){
       if(mapVMpages(pgdir, (char*)va, PGSIZE, perm|PTE_U) < 0){

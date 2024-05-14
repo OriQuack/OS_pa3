@@ -17,21 +17,21 @@ int main(){
     printf(1, "open failed");
     exit();
   }
-  printf(2, "OPEN DONE");
+
   char buf[10];
-  read(fd, &buf, 10);
-  printf(1, "%c %c", buf[0], buf[1]);
+  read(fd, buf, 10);
+  printf(1, "read: %c %c\n", buf[0], buf[1]);
 
   char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, 0, 0);
-  printf(1, "mmap annony done %c", *anony);
+  printf(1, "mmap annony done %u", (uint)anony);
 
   char* src = (char*)mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
     printf(1, "mmap failed");
     exit();
   }
-  printf(2, "MMAP DONE");
+  printf(2, "MMAP DONE\n");
 
-  printf(1, "-fd data: %c %c %c\n", src[0], src[1], src[2]);
+  printf(1, "-fd data: %c %c %c %c\n", src[0], src[1], src[2], src[3]);
   exit();
 }
