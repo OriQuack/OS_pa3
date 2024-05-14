@@ -32,7 +32,7 @@ int main(){
   printf(1, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
 
   // UNMAP
-  int k = munmap(src);
+  int k = munmap((uint)src);
   if(k == -1){
     printf(1, "UNMAP FAILED");
     exit();
