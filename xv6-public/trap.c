@@ -84,7 +84,8 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_PGFLT:
-  cprintf("PGFAULT Adress: %x\n", rcr2());
+    cprintf("PGFAULT Adress: %x\n", rcr2());
+    uint fpaddr = PGROUNDDOWN(rcr2());
     struct mmap_area *m;
     int found = -1;
     for(int i = 0; i < mmap_count; i++){
@@ -100,7 +101,7 @@ trap(struct trapframe *tf)
     
     // locate faulted page
     uint page_offset = 0;
-    while(page_offset + m->addr < rcr2()){
+    while(page_offset + m->addr < fpaddr){
       page_offset += PGSIZE;
     }
     

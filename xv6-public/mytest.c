@@ -80,7 +80,7 @@ int main(){
   }
   printf(1, "ANONY DONE: %x\n", (uint)anony);
   printf(1, "FREE MEM: %d\n", freemem());
-  printf(1, "ANONY READ: %c\n", anony[0]);
+  printf(1, "ANONY READ: %c\n", anony[1]);
   printf(1, "FREE MEM: %d\n", freemem());
 
   int kasdf = fork();
