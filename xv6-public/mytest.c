@@ -22,16 +22,19 @@ int main(){
   read(fd, buf, 10);
   printf(1, "read: %c %c\n", buf[0], buf[1]);
 
-  char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, 0, 0);
+  char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, -1, 0);
+  if(anony == 0){
+    printf(1, "ANONY failed");
+  }
   printf(1, "mmap annony done %d\n", (uint)anony);
   printf(1, "ANONY READ: %c %c\n", anony[0], anony[4095]);
 
   char* src = (char*)mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
-    printf(1, "mmap failed");
+    printf(1, "POPULATE failed");
     exit();
   }
-  printf(2, "MMAP DONE\n");
+  printf(2, "POPULATE DONE\n");
 
   printf(1, "-fd data: %c %c %c %c\n", src[0], src[1], src[2], src[3]);
   exit();
