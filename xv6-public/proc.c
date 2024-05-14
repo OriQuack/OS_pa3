@@ -592,6 +592,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
       // read file to memory with offset
       if(filereadOffset(f, prot, mem, offset, PGSIZE) == -1)
         return 0;
+      va += PGSIZE;
     }
   }
   // only record mapping area & make PAGE TABLE if not exists
@@ -601,6 +602,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         cprintf("out of memory\n");
         return 0;
       }
+      va += PGSIZE;
     }
   }
   // allocate physical page & make page table & fill with zero
@@ -618,6 +620,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         kfree(mem);
         return 0;
       }
+      va += PGSIZE;
     }
   }
   // NO FLAG / WTF?
@@ -631,7 +634,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   }
   // add to mmap_area
   struct mmap_area *m = mmap_arr[mmap_count];
-  m->addr = va;
+  m->addr = addr + 0x40000000;
   m->f = f;
   m->flags = flags;
   m->length = length;
