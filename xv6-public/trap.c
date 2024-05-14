@@ -117,8 +117,7 @@ trap(struct trapframe *tf)
       if(filereadOffset(m->f, m->prot, mem, m->offset, PGSIZE) == -1)
         panic("page fault cannot map (4)\n");
     cprintf("IN TRAP: DONE\n");
-    cprintf("killed: %d\n", myproc()->killed);
-    
+    break;
 
   //PAGEBREAK: 13
   default:
