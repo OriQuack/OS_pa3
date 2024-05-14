@@ -450,8 +450,8 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
         pte_flags = PTE_FLAGS(*pte);
         // parent not physically mapped
         if(!(*pte & PTE_P)){
+          cprintf("VM GO\n");
           mapVMpages(pgdir, va, PGSIZE, pte_flags);
-          cprintf("VM DONE\n");
         }
         // parent physically mapped
         else{
