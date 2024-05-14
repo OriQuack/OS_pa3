@@ -458,14 +458,12 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
             return -1;
           memset(mem, 0, PGSIZE);
           memmove(mem, (char*)P2V(pa), PGSIZE);
-          cprintf("HERE");
           if(mappages(pgdir, va, PGSIZE, V2P(mem), pte_flags) < 0) {
             kfree(mem);
             return -1;
           }
         }
         va += PGSIZE;
-        cprintf("ONECYCLE||");
       }
       struct mmap_area *n = mmap_arr[mmap_count];
       n->addr = m->addr;

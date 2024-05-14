@@ -84,7 +84,6 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_PGFLT:
-    cprintf("PGFAULT Adress: %x\n", rcr2());
     uint fpaddr = PGROUNDDOWN(rcr2());
     struct mmap_area *m;
     int found = -1;
@@ -104,7 +103,6 @@ trap(struct trapframe *tf)
     while(page_offset + m->addr < fpaddr){
       page_offset += PGSIZE;
     }
-    cprintf("PGOFFSET: %d||", page_offset);
     
     // map page
     char *mem;
@@ -126,7 +124,6 @@ trap(struct trapframe *tf)
         panic("page fault cannot map (4)\n");
 
     lapiceoi();
-    cprintf("PGFAULT DONE\n");
     break;
 
   //PAGEBREAK: 13
