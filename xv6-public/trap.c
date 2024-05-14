@@ -84,7 +84,6 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_PGFLT:
-    cprintf("Page Fault!!\n");
     struct mmap_area *m;
     int found = -1;
     for(int i = 0; i < mmap_count; i++){
@@ -116,7 +115,8 @@ trap(struct trapframe *tf)
     if(m->f != 0)
       if(filereadOffset(m->f, m->prot, mem, m->offset, PGSIZE) == -1)
         panic("page fault cannot map (4)\n");
-    cprintf("IN TRAP: DONE\n");
+        
+    lapiceoi();
     break;
 
   //PAGEBREAK: 13
