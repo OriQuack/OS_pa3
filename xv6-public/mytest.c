@@ -17,13 +17,14 @@ int main(){
     printf(1, "open failed");
     exit();
   }
+  printf(2, "OPEN DONE");
 
   char* src = (char*)mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
     printf(1, "mmap failed");
     exit();
   }
-  printf(1, "MMAP DONE");
+  printf(2, "MMAP DONE");
 
   printf(1, "-fd data: %c %c %c\n", src[0], src[1], src[2]);
   exit();
