@@ -583,19 +583,23 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
 
     for(int i = 0; i < npages; i++){
       mem = kalloc();
+      cprintf("kalloc done");
       if(mem == 0){
         cprintf("out of memory\n");
         return 0;
       }
       memset(mem, 0, PGSIZE);
+      cprintf("memset done");
       if(mappages(pgdir, (char*)va, PGSIZE, V2P(mem), perm|PTE_U) < 0){
         cprintf("out of memory (2)\n");
         kfree(mem);
         return 0;
       }
+      cprintf("mmapges done");
       // read file to memory with offset
       if(filereadOffset(f, prot, (char *)V2P(mem), offset, PGSIZE) == -1)
         return 0;
+      cprintf("fileread done");
     }
   }
   // only record mapping area / PAGE TABLE?
