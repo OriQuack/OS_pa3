@@ -225,7 +225,6 @@ fork(void)
   np->parent = curproc;
   *np->tf = *curproc->tf;
 
-  cprintf("GO MYCODE\n");
   // MYCODE: Copy mmap region of parent
   if(copyummap(np->pgdir, np->parent, np) < 0){
     kfree(np->kstack);

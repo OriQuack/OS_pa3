@@ -465,6 +465,7 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
           }
         }
         va += PGSIZE;
+        cprintf("ONECYCLE||");
       }
       struct mmap_area *n = mmap_arr[mmap_count];
       n->addr = m->addr;
