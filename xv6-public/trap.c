@@ -114,7 +114,7 @@ trap(struct trapframe *tf)
       panic("Page fault cannot map (2)\n");
     }
     memset(mem, 0, PGSIZE);
-    if(mappages(pgdir, (char*)(m->addr + page_offset), PGSIZE, V2P(mem), PTE_U) < 0){
+    if(mappages(pgdir, (char*)(m->addr + page_offset), PGSIZE, V2P(mem), PTE_P|PTE_U) < 0){
       cprintf("out of memory (2)\n");
       kfree(mem);
       panic("page fault cannot map (3)\n");
