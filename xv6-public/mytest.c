@@ -18,20 +18,10 @@ int main(){
     exit();
   }
 
+  // FREE MEM
   printf(1, "FREE MEM: %d\n", freemem());
 
-  char buf[10];
-  read(fd, buf, 10);
-  printf(1, "read: %c %c\n", buf[0], buf[1]);
-
-  char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, -1, 0);
-  if(anony == 0){
-    printf(1, "ANONY failed");
-  }
-  printf(1, "ANONY DONE: %d\n", (uint)anony);
-  printf(1, "FREE MEM: %d\n", freemem());
-  printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[2], anony[4095]);
-
+  // POPULATE
   char* src = (char*)mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
     printf(1, "POPULATE failed");
@@ -41,12 +31,32 @@ int main(){
   printf(1, "FREE MEM: %d\n", freemem());
   printf(1, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
 
+  // UNMAP
   int k = munmap(0);
   if(k == -1){
     printf(1, "UNMAP FAILED");
   }
   printf(1, "UNMAP DONE\n");
   printf(1, "FREE MEM: %d\n", freemem());
+
+  // ANONYMOUS + POPULATE
+  char* dst = (char *)mmap(0, 4096, PROT_READ, MAP_ANONYMOUS|MAP_POPULATE, -1, 0);
+    if(src == 0){
+    printf(1, "ANONY POPULATE failed");
+    exit();
+  }
+  printf(2, "ANONY POPULATE DONE\n");
+  printf(1, "FREE MEM: %d\n", freemem());
+  printf(1, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
+
+  // ANONYMOUS
+  char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, -1, 0);
+  if(anony == 0){
+    printf(1, "ANONY failed");
+  }
+  printf(1, "ANONY DONE: %d\n", (uint)anony);
+  printf(1, "FREE MEM: %d\n", freemem());
+  printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[2], anony[4095]);
 
   exit();
 }
