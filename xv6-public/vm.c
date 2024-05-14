@@ -432,7 +432,7 @@ copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
   struct mmap_area *m = 0;
   pde_t *ppgdir = parent->pgdir;
   pte_t *ppte = 0;
-  pte_t *pte = 0;
+  // pte_t *pte = 0;
   char* va = 0;
   char* mem = 0;
   int numpages = 0;
