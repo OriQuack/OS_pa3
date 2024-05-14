@@ -29,7 +29,7 @@ int main(){
   }
   printf(2, "POPULATE DONE\n");
   printf(2, "FREE MEM: %d\n", freemem());
-  printf(2, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
+  printf(2, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[8191]);
 
   // UNMAP
   int k = munmap((uint)src);
@@ -56,7 +56,7 @@ int main(){
     printf(1, "ANONY failed");
     exit();
   }
-  printf(1, "ANONY DONE: %d\n", (uint)anony);
+  printf(1, "ANONY DONE: %x\n", (uint)anony);
   printf(1, "FREE MEM: %d\n", freemem());
   printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[2], anony[4095]);
   printf(1, "FREE MEM: %d\n", freemem());
