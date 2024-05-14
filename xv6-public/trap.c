@@ -97,6 +97,8 @@ trap(struct trapframe *tf)
     if(found == -1){
       panic("Page fault cannot map (1)\n");
     }
+
+    cprintf("IN TRAP: found page: %x", m->addr);
     
     // map page
     char *mem;
@@ -114,7 +116,7 @@ trap(struct trapframe *tf)
     }
     // read file to memory with offset
     if(m->f != 0)
-      if(filereadOffset(m->f, m->prot, (char *)V2P(mem), m->offset, PGSIZE) == -1)
+      if(filereadOffset(m->f, m->prot, mem, m->offset, PGSIZE) == -1)
         panic("page fault cannot map (4)\n");
     
     lapiceoi();

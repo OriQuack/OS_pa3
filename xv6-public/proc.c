@@ -588,7 +588,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         return 0;
       }
       memset(mem, 0, PGSIZE);
-      if(mappages(pgdir, (char*)va, PGSIZE, V2P(mem), perm|PTE_U) < 0){
+      if(mappages(pgdir, (char*)va, PGSIZE, V2P(mem), PTE_U) < 0){
         cprintf("out of memory (2)\n");
         kfree(mem);
         return 0;
@@ -601,7 +601,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   // only record mapping area & make PAGE TABLE if not exists
   else if(flags == MAP_ANONYMOUS || flags == 0){
     for(int i = 0; i < npages; i++){
-      if(mapVMpages(pgdir, (char*)va, PGSIZE, perm) < 0){
+      if(mapVMpages(pgdir, (char*)va, PGSIZE, 0) < 0){
         cprintf("out of memory\n");
         return 0;
       }
