@@ -98,7 +98,7 @@ trap(struct trapframe *tf)
       panic("Page fault cannot map (1)\n");
     }
 
-    cprintf("IN TRAP: found page: %x", m->addr);
+    cprintf("IN TRAP: found page: %x\n", m->addr);
     
     // map page
     char *mem;
@@ -109,7 +109,7 @@ trap(struct trapframe *tf)
       panic("Page fault cannot map (2)\n");
     }
     memset(mem, 0, PGSIZE);
-    if(mappages(pgdir, (char*)m->addr, PGSIZE, V2P(mem), m->prot|PTE_U) < 0){
+    if(mappages(pgdir, (char*)m->addr, PGSIZE, V2P(mem), PTE_U) < 0){
       cprintf("out of memory (2)\n");
       kfree(mem);
       panic("page fault cannot map (3)\n");
@@ -119,8 +119,7 @@ trap(struct trapframe *tf)
       if(filereadOffset(m->f, m->prot, mem, m->offset, PGSIZE) == -1)
         panic("page fault cannot map (4)\n");
     
-    lapiceoi();
-
+    
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
