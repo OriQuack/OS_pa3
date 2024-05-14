@@ -425,6 +425,59 @@ bad:
   return 0;
 }
 
+// MYCODE
+int
+copyummap(pde_t *pgdir, struct proc *parent, struct proc *p)
+{
+  struct mmap_area *m = 0;
+  pde_t *ppgdir = parent->pgdir;
+  pte_t *pte = 0;
+  char* va = 0;
+  char* mem = 0;
+  int numpages = 0;
+  uint pa, pte_flags;
+
+  for(int i = 0; i < mmap_count; i++){
+    m = mmap_arr[i];
+    if(m->p == parent){
+      va = (char*)m->addr;
+      numpages = m->length / PGSIZE;
+      for(int j = 0; j < numpages; j++){
+        // get pte of ppgdir
+        if((pte = walkpgdir(ppgdir, va, 1)) == 0)
+          return -1;
+        pa = PTE_ADDR(*pte);
+        pte_flags = PTE_FLAGS(*pte);
+        // parent not physically mapped
+        if(!(*pte & PTE_P)){
+          mapVMpages(pgdir, va, PGSIZE, pte_flags);
+        }
+        // parent physically mapped
+        else{
+          if((mem = kalloc()) == 0)
+            return -1;
+          memmove(mem, (char*)P2V(pa), PGSIZE);
+          if(mappages(pgdir, va, PGSIZE, V2P(mem), pte_flags) < 0) {
+            kfree(mem);
+            return -1;
+          }
+        }
+        va += PGSIZE;
+      }
+      struct mmap_area *n = mmap_arr[mmap_count];
+      n->addr = m->addr;
+      n->f = m->f;
+      n->flags = m->flags;
+      n->length = m->length;
+      n->offset = m->offset;
+      n->p = p;
+      n->prot = m->prot;
+      mmap_arr[mmap_count++] = n;
+    }
+  }
+  return 1;
+}
+
 //PAGEBREAK!
 // Map user virtual address to kernel address.
 char*

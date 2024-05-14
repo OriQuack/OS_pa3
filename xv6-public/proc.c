@@ -13,6 +13,7 @@ extern int mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm);
 extern int mapVMpages(pde_t *pgdir, void *va, uint size, int perm);
 extern int filereadOffset(struct file *f, int prot, char *addr, int offset, int n);
 extern int _munmap(pde_t *pgdir, uint addr, int length);
+extern int copyummap(pde_t *pgdir, struct proc *parent, struct proc *p);
 
 struct mmap_area *mmap_arr[64];
 int mmap_count;
@@ -223,6 +224,14 @@ fork(void)
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
+
+  // MYCODE: Copy mmap region of parent
+  if(copyummap(np->pgdir, np->parent, np) < 0){
+    kfree(np->kstack);
+    np->kstack = 0;
+    np->state = UNUSED;
+    return -1;
+  }
 
   // Clear %eax so that fork returns 0 in the child.
   np->tf->eax = 0;

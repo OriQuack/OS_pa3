@@ -43,6 +43,9 @@ struct mmap_area {
   struct proc * p;
 };
 
+extern struct mmap_area *mmap_arr[64];
+extern int mmap_count;
+
 enum procstate { UNUSED, EMBRYO, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
 // Per-process state

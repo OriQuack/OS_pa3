@@ -88,7 +88,7 @@ trap(struct trapframe *tf)
     int found = -1;
     for(int i = 0; i < mmap_count; i++){
       m = mmap_arr[i];
-      if(m->addr < rcr2() && m->addr + m->length > rcr2()){
+      if(m->addr < rcr2() && m->addr + m->length > rcr2() && m->p == myproc()){
         found = i;
         break;
       }
