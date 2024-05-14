@@ -89,7 +89,7 @@ trap(struct trapframe *tf)
     int found = -1;
     for(int i = 0; i < mmap_count; i++){
       m = mmap_arr[i];
-      if(m->addr <= rcr2() && m->addr + m->length > rcr2() && m->p == myproc()){
+      if(rcr2() >= m->addr && rcr2() < m->addr + m->length && m->p == myproc()){
         found = i;
         break;
       }
@@ -113,7 +113,7 @@ trap(struct trapframe *tf)
       panic("Page fault cannot map (2)\n");
     }
     memset(mem, 0, PGSIZE);
-    if(mappages(pgdir, (char*)m->addr + page_offset, PGSIZE, V2P(mem), PTE_U) < 0){
+    if(mappages(pgdir, (char*)(m->addr + page_offset), PGSIZE, V2P(mem), PTE_U) < 0){
       cprintf("out of memory (2)\n");
       kfree(mem);
       panic("page fault cannot map (3)\n");
