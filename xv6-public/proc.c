@@ -601,7 +601,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   // only record mapping area & make PAGE TABLE if not exists
   else if(flags == MAP_ANONYMOUS || flags == 0){
     for(int i = 0; i < npages; i++){
-      if(mapVMpages(pgdir, (char*)va, PGSIZE, perm|PTE_U) < 0){
+      if(mapVMpages(pgdir, (char*)va, PGSIZE, perm) < 0){
         cprintf("out of memory\n");
         return 0;
       }
