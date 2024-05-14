@@ -119,6 +119,7 @@ trap(struct trapframe *tf)
         panic("page fault cannot map (4)\n");
 
     lapiceoi();
+    cprintf("PGFAULT DONE\n");
     break;
 
   //PAGEBREAK: 13
