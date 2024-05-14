@@ -36,9 +36,11 @@ int main(){
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
     printf(2, "CHILD: -fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[8191]);
     int ppid = fork();
-    if(pid == 0){
+    if(ppid == 0){
       printf(2, "CHILDCHILD: data: %c\n", src[0]);
+      exit();
     }
+    wait();
     if(munmap((uint)src) < 0){
       printf(2, "CHILD: UNMAP FAILED\n");
       exit();
