@@ -39,11 +39,12 @@ int main(){
       printf(2, "CHILD: UNMAP FAILED\n");
       exit();
     }
+    printf(2, "CHILD: UNMAP DONE");
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
     char* new = (char*)mmap(0, 4096 * 3, PROT_READ, MAP_ANONYMOUS, -1, 0);
     printf(2, "CHID: ANONY DONE\n");
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
-    printf(2, "CHID: ANONY access %c\n", new[0]);
+    printf(2, "CHILD: ANONY access %c\n", new[0]);
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
     
     exit();
