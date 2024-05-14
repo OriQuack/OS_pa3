@@ -396,7 +396,7 @@ copyuvm(pde_t *pgdir, uint sz)
 {
   pde_t *d;
   pte_t *pte;
-  // uint pa;
+  uint pa;
   uint i, flags;
   char *mem;
 
@@ -406,13 +406,13 @@ copyuvm(pde_t *pgdir, uint sz)
     if((pte = walkpgdir(pgdir, (void *) i, 0)) == 0)
       panic("copyuvm: pte should exist");
     if(!(*pte & PTE_P)){
-      // panic("copyuvm: page not present");
+      panic("copyuvm: page not present");
     }
-    // pa = PTE_ADDR(*pte);
+    pa = PTE_ADDR(*pte);
     flags = PTE_FLAGS(*pte);
     if((mem = kalloc()) == 0)
       goto bad;
-    // memmove(mem, (char*)P2V(pa), PGSIZE);
+    memmove(mem, (char*)P2V(pa), PGSIZE);
     if(mappages(d, (void*)i, PGSIZE, V2P(mem), flags) < 0) {
       kfree(mem);
       goto bad;
