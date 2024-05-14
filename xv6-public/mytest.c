@@ -88,9 +88,9 @@ int main(){
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
     printf(2, "CHILD: ANONY READ: %c\n", anony[0]);
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
-    printf(2, "CHILD: ANONY READ: %c\n", anony[4096]);
+    printf(2, "CHILD: ANONY READ: %c\n", anony[1]);
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
-    printf(2, "CHILD: ANONY READ: %c\n", anony[4096*2]);
+    printf(2, "CHILD: ANONY READ: %c\n", anony[4096]);
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
     exit();
   }

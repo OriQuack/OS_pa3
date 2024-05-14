@@ -104,6 +104,7 @@ trap(struct trapframe *tf)
     while(page_offset + m->addr < fpaddr){
       page_offset += PGSIZE;
     }
+    cprintf("PGOFFSET: %d||", page_offset);
     
     // map page
     char *mem;
