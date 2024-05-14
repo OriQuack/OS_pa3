@@ -595,7 +595,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
       }
       cprintf("mmapges done\n");
       // read file to memory with offset
-      if(filereadOffset(f, prot, (char *)V2P(mem), offset, PGSIZE) == -1)
+      if(filereadOffset(f, prot, mem, offset, PGSIZE) == -1)
         return 0;
       cprintf("fileread done\n");
     }
