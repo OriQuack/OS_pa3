@@ -31,6 +31,13 @@ int main(){
   printf(2, "FREE MEM: %d\n", freemem());
   printf(2, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[8191]);
 
+  int pid = fork();
+  if(pid == 0){
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    printf(2, "CHILD: -fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[8191]);
+    exit();
+  }
+
   // UNMAP
   int k = munmap((uint)src);
   if(k == -1){
