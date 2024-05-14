@@ -408,7 +408,7 @@ copyuvm(pde_t *pgdir, uint sz)
     if(!(*pte & PTE_P)){
       // panic("copyuvm: page not present");
     }
-    pa = PTE_ADDR(*pte);
+    // pa = PTE_ADDR(*pte);
     flags = PTE_FLAGS(*pte);
     if((mem = kalloc()) == 0)
       goto bad;
