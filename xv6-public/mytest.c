@@ -35,6 +35,7 @@ int main(){
   int k = munmap(0);
   if(k == -1){
     printf(1, "UNMAP FAILED");
+    exit();
   }
   printf(1, "UNMAP DONE\n");
   printf(1, "FREE MEM: %d\n", freemem());
@@ -53,6 +54,7 @@ int main(){
   char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, -1, 0);
   if(anony == 0){
     printf(1, "ANONY failed");
+    exit();
   }
   printf(1, "ANONY DONE: %d\n", (uint)anony);
   printf(1, "FREE MEM: %d\n", freemem());
