@@ -26,8 +26,8 @@ int main(){
   if(anony == 0){
     printf(1, "ANONY failed");
   }
-  printf(1, "mmap annony done %d\n", (uint)anony);
-  printf(1, "ANONY READ: %c %c\n", anony[0], anony[4095]);
+  printf(1, "ANONY DONE: %d\n", (uint)anony);
+  printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[2], anony[4095]);
 
   char* src = (char*)mmap(0, 4096, PROT_READ, MAP_POPULATE, fd, 0);
   if(src == 0){
@@ -36,6 +36,6 @@ int main(){
   }
   printf(2, "POPULATE DONE\n");
 
-  printf(1, "-fd data: %c %c %c %c\n", src[0], src[1], src[2], src[3]);
+  printf(1, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
   exit();
 }
