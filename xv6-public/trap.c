@@ -99,6 +99,12 @@ trap(struct trapframe *tf)
       panic("Page fault cannot map (1)\n");
     }
     
+    // locate faulted page
+    uint page_offset = 0;
+    while(page_offset + m->addr < rcr2()){
+      page_offset += PGSIZE;
+    }
+    
     // map page
     char *mem;
     pde_t *pgdir = m->p->pgdir;
@@ -108,14 +114,14 @@ trap(struct trapframe *tf)
       panic("Page fault cannot map (2)\n");
     }
     memset(mem, 0, PGSIZE);
-    if(mappages(pgdir, (char*)m->addr, PGSIZE, V2P(mem), PTE_U) < 0){
+    if(mappages(pgdir, (char*)m->addr + page_offset, PGSIZE, V2P(mem), PTE_U) < 0){
       cprintf("out of memory (2)\n");
       kfree(mem);
       panic("page fault cannot map (3)\n");
     }
     // read file to memory with offset
     if(m->f != 0)
-      if(filereadOffset(m->f, m->prot, mem, m->offset, PGSIZE) == -1)
+      if(filereadOffset(m->f, m->prot, mem, m->offset + page_offset, PGSIZE) == -1)
         panic("page fault cannot map (4)\n");
 
     lapiceoi();
