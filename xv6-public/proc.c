@@ -650,7 +650,8 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
 int
 munmap(uint addr)
 {
-  addr = addr + 0x40000000;
+  if(addr % PGSIZE != 0) return 0;
+
   struct mmap_area *m = 0;
   int found = -1;
   for(int i = 0; i < mmap_count; i++){

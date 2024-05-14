@@ -32,7 +32,7 @@ int main(){
   printf(1, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
 
   // UNMAP
-  int k = munmap(0);
+  int k = munmap(src);
   if(k == -1){
     printf(1, "UNMAP FAILED");
     exit();
@@ -59,6 +59,12 @@ int main(){
   printf(1, "ANONY DONE: %d\n", (uint)anony);
   printf(1, "FREE MEM: %d\n", freemem());
   printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[2], anony[4095]);
+  printf(1, "FREE MEM: %d\n", freemem());
+
+  munmap(anony);
+  printf(1, "FREE MEM: %d\n", freemem());
+  munmap(dst);
+  printf(1, "FREE MEM: %d\n", freemem());
 
   exit();
 }
