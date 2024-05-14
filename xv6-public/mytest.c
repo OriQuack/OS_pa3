@@ -31,27 +31,27 @@ int main(){
   printf(2, "FREE MEM: %d\n", freemem());
   printf(2, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[8191]);
 
-  int pid = fork();
-  if(pid == 0){
-    printf(2, "CHILD: FREE MEM: %d\n", freemem());
-    printf(2, "CHILD: -fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[8191]);
-    if(munmap((uint)src) < 0){
-      printf(2, "CHILD: UNMAP FAILED\n");
-      exit();
-    }
-    printf(2, "CHILD: UNMAP DONE");
-    printf(2, "CHILD: FREE MEM: %d\n", freemem());
-    char* new = (char*)mmap(0, 4096 * 3, PROT_READ, MAP_ANONYMOUS, -1, 0);
-    printf(2, "CHID: ANONY DONE\n");
-    printf(2, "CHILD: FREE MEM: %d\n", freemem());
-    printf(2, "CHILD: ANONY access %c\n", new[0]);
-    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+  // int pid = fork();
+  // if(pid == 0){
+  //   printf(2, "CHILD: FREE MEM: %d\n", freemem());
+  //   printf(2, "CHILD: -fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[8191]);
+  //   if(munmap((uint)src) < 0){
+  //     printf(2, "CHILD: UNMAP FAILED\n");
+  //     exit();
+  //   }
+  //   printf(2, "CHILD: UNMAP DONE");
+  //   printf(2, "CHILD: FREE MEM: %d\n", freemem());
+  //   char* new = (char*)mmap(0, 4096 * 3, PROT_READ, MAP_ANONYMOUS, -1, 0);
+  //   printf(2, "CHID: ANONY DONE\n");
+  //   printf(2, "CHILD: FREE MEM: %d\n", freemem());
+  //   printf(2, "CHILD: ANONY access %c\n", new[0]);
+  //   printf(2, "CHILD: FREE MEM: %d\n", freemem());
     
-    exit();
-  }
-  else{
-    wait();
-  }
+  //   exit();
+  // }
+  // else{
+  //   wait();
+  // }
 
   // UNMAP
   int k = munmap((uint)src);
