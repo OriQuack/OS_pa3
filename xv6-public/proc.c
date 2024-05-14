@@ -561,10 +561,9 @@ procdump(void)
 uint
 mmap(uint addr, int length, int prot, int flags, int fd, int offset)
 {
-  struct proc* p = myproc();
   struct file *f = 0;
   if(fd >= 0)
-    f = p->ofile[fd];
+    f = myproc()->ofile[fd];
   uint va = addr + 0x40000000;
   int npages = length / PGSIZE;
 
@@ -574,13 +573,10 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   if((flags == MAP_ANONYMOUS || flags == 0) && (fd != -1 || offset != 0)) return 0;
 
   pde_t *pgdir = myproc()->pgdir;
-  int perm = prot; // & PROT_WRITE;
 
   // allocate physical page & make page table & map file from disk
   if(flags == MAP_POPULATE){
     char *mem;
-    f = myproc()->ofile[fd];
-
     for(int i = 0; i < npages; i++){
       mem = kalloc(); // virtual
       if(mem == 0){
@@ -617,30 +613,30 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         return 0;
       }
       memset(mem, 0, PGSIZE);
-      if(mappages(pgdir, (char*)va, PGSIZE, V2P(mem), perm|PTE_U) < 0){
+      if(mappages(pgdir, (char*)va, PGSIZE, V2P(mem), PTE_U) < 0){
         cprintf("out of memory (2)\n");
         kfree(mem);
         return 0;
       }
     }
   }
-  // only record mapping area / WTF?
+  // NO FLAG / WTF?
   else{
     for(int i = 0; i < npages; i++){
-      if(mapVMpages(pgdir, (char*)va, PGSIZE, perm|PTE_U) < 0){
+      if(mapVMpages(pgdir, (char*)va, PGSIZE, PTE_U) < 0){
         cprintf("out of memory\n");
         return 0;
       }
     }
   }
-  // add to mmap_area / malloc??
-  struct mmap_area *m = mmap_arr[mmap_count++];
+  // add to mmap_area
+  struct mmap_area *m = mmap_arr[mmap_count];
   m->addr = va;
   m->f = f;
   m->flags = flags;
   m->length = length;
   m->offset = offset;
-  m->p = p;
+  m->p = myproc();
   m->prot = prot;
   mmap_arr[mmap_count++] = m;
 

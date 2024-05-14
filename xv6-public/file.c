@@ -117,7 +117,7 @@ int
 filereadOffset(struct file *f, int prot, char *addr, int offset, int n)
 {
   int r;
-  if(f->readable == 0)
+  if(prot & PROT_READ && !f->readable)
     return -1;
   if((prot & PROT_WRITE) && !f->writable)
     return -1;
