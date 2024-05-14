@@ -84,7 +84,7 @@ trap(struct trapframe *tf)
     lapiceoi();
     break;
   case T_PGFLT:
-  cprintf("PGFAULT\n");
+  cprintf("PGFAULT Adress: %x\n", rcr2());
     struct mmap_area *m;
     int found = -1;
     for(int i = 0; i < mmap_count; i++){
@@ -95,7 +95,6 @@ trap(struct trapframe *tf)
       }
     }
     if(found == -1){
-      cprintf("Address: %x\n", rcr2());
       panic("Page fault cannot map (1)\n");
     }
     
