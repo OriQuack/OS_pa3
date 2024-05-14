@@ -29,6 +29,7 @@ int main(){
   }
   printf(2, "POPULATE DONE\n");
   printf(2, "FREE MEM: %d\n", freemem());
+  printf(2, "hi");
   printf(2, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
 
   // UNMAP
