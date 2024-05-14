@@ -61,9 +61,9 @@ int main(){
   printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[2], anony[4095]);
   printf(1, "FREE MEM: %d\n", freemem());
 
-  munmap(anony);
+  munmap((uint)anony);
   printf(1, "FREE MEM: %d\n", freemem());
-  munmap(dst);
+  munmap((uint)dst);
   printf(1, "FREE MEM: %d\n", freemem());
 
   exit();
