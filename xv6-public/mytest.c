@@ -41,13 +41,13 @@ int main(){
 
   // ANONYMOUS + POPULATE
   char* dst = (char *)mmap(0, 4096, PROT_READ, MAP_ANONYMOUS|MAP_POPULATE, -1, 0);
-    if(src == 0){
+    if(dst == 0){
     printf(1, "ANONY POPULATE failed");
     exit();
   }
   printf(2, "ANONY POPULATE DONE\n");
   printf(1, "FREE MEM: %d\n", freemem());
-  printf(1, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
+  printf(1, "-fd data: %c %c %c %c %c\n", dst[0], dst[1], dst[2], dst[3], dst[4095]);
 
   // ANONYMOUS
   char *anony = (char*)mmap(4096, 4096, PROT_READ, MAP_ANONYMOUS, -1, 0);
