@@ -28,8 +28,8 @@ int main(){
     exit();
   }
   printf(2, "POPULATE DONE\n");
-  printf(1, "FREE MEM: %d\n", freemem());
-  printf(1, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
+  printf(2, "FREE MEM: %d\n", freemem());
+  printf(2, "-fd data: %c %c %c %c %c\n", src[0], src[1], src[2], src[3], src[4095]);
 
   // UNMAP
   int k = munmap((uint)src);
@@ -37,8 +37,8 @@ int main(){
     printf(2, "UNMAP FAILED");
     exit();
   }
-  printf(1, "UNMAP DONE\n");
-  printf(1, "FREE MEM: %d\n", freemem());
+  printf(2, "UNMAP DONE\n");
+  printf(2, "FREE MEM: %d\n", freemem());
 
   // ANONYMOUS + POPULATE
   char* dst = (char *)mmap(0, 4096, PROT_READ, MAP_ANONYMOUS|MAP_POPULATE, -1, 0);

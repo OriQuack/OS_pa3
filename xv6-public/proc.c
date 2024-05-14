@@ -630,6 +630,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
         cprintf("out of memory\n");
         return 0;
       }
+      va += PGSIZE;
     }
   }
   // add to mmap_area
