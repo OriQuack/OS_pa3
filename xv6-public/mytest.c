@@ -84,6 +84,7 @@ int main(){
   printf(1, "FREE MEM: %d\n", freemem());
 
   int kasdf = fork();
+  printf(2, "HI");
   if(kasdf == 0){
     printf(2, "CHILD: FREE MEM: %d\n", freemem());
     printf(2, "CHILD: ANONY READ: %c\n", anony[0]);
