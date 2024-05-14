@@ -94,7 +94,7 @@ trap(struct trapframe *tf)
       }
     }
     if(found == -1){
-      cprintf("Address: %d\n", rcr2());
+      cprintf("Address: %x\n", rcr2());
       panic("Page fault cannot map (1)\n");
     }
     

@@ -644,7 +644,7 @@ mmap(uint addr, int length, int prot, int flags, int fd, int offset)
   m->prot = prot;
   mmap_arr[mmap_count++] = m;
 
-  return va;
+  return addr + 0x40000000;
 }
 
 int
