@@ -97,8 +97,6 @@ trap(struct trapframe *tf)
     if(found == -1){
       panic("Page fault cannot map (1)\n");
     }
-
-    cprintf("IN TRAP: found page: %x\n", m->addr);
     
     // map page
     char *mem;
@@ -118,8 +116,9 @@ trap(struct trapframe *tf)
     if(m->f != 0)
       if(filereadOffset(m->f, m->prot, mem, m->offset, PGSIZE) == -1)
         panic("page fault cannot map (4)\n");
+    cprintf("IN TRAP: DONE");
     
-    
+
   //PAGEBREAK: 13
   default:
     if(myproc() == 0 || (tf->cs&3) == 0){
