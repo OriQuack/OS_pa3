@@ -275,6 +275,16 @@ exit(void)
     }
   }
 
+  // MYCODE: clear mmap_arr
+  for(int i = 0; i < mmap_count; i++){
+    if(mmap_arr[i]->p == curproc){
+      for(int j = i; j < mmap_count - 1; j++){
+        mmap_arr[j] = mmap_arr[j + 1];
+      }
+      memset(mmap_arr[--mmap_count], 0, sizeof(struct mmap_area));
+    }
+  }
+
   begin_op();
   iput(curproc->cwd);
   end_op();
