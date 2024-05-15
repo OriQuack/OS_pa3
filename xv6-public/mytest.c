@@ -89,18 +89,18 @@ int main(){
   printf(1, "ANONY READ: %c %c %c %c\n", anony[0], anony[1], anony[2], anony[4096]);
   printf(1, "FREE MEM: %d\n", freemem());
 
-  // int kasdf = fork();
-  // if(kasdf == 0){
-  //   printf(2, "CHILD: FREE MEM: %d\n", freemem());
-  //   printf(2, "CHILD: ANONY READ: %c\n", anony[0]);
-  //   printf(2, "CHILD: FREE MEM: %d\n", freemem());
-  //   printf(2, "CHILD: ANONY READ: %c\n", anony[1]);
-  //   printf(2, "CHILD: FREE MEM: %d\n", freemem());
-  //   printf(2, "CHILD: ANONY READ: %c\n", anony[4096*2]);
-  //   printf(2, "CHILD: FREE MEM: %d\n", freemem());
-  //   exit();
-  // }
-  // wait();
+  int kasdf = fork();
+  if(kasdf == 0){
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    printf(2, "CHILD: ANONY READ: %c\n", anony[0]);
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    printf(2, "CHILD: ANONY READ: %c\n", anony[1]);
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    printf(2, "CHILD: ANONY READ: %c\n", anony[4096*2]);
+    printf(2, "CHILD: FREE MEM: %d\n", freemem());
+    exit();
+  }
+  wait();
   munmap((uint)dst);
   printf(1, "FREE MEM: %d\n", freemem());
   munmap((uint)anony);
